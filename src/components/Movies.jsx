@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import Like from "./common/liked";
 import Pagination from "./common/pagination";
+import paginate from "../utils/paginate";
 
 class Movies extends Component {
   state = {
@@ -29,21 +30,36 @@ class Movies extends Component {
     this.setState({ currentPage: page });
   };
 
-  handleGoToPrevious = () => {};
+  handleGoToPrevious = () => {
+    const { currentPage } = this.state;
+    this.setState({ currentPage: currentPage > 1 ? currentPage - 1 : 1 });
+  };
 
-  handleGoToNext = () => {};
+  handleGoToNext = () => {
+    const { currentPage, itemsPerPage } = this.state;
+    const { length: count } = this.state.movies;
+    const lastPage = Math.ceil(count / itemsPerPage);
+    this.setState({
+      currentPage: currentPage < lastPage ? currentPage + 1 : lastPage,
+    });
+  };
 
   render() {
-    if (!this.state.movies.length)
+    const { length: count } = this.state.movies;
+    const { itemsPerPage, currentPage, movies } = this.state;
+
+    if (!count)
       return (
         <div>
           <h1>No Movies Found!</h1>
         </div>
       );
 
+    const moviesPage = paginate(movies, currentPage, itemsPerPage);
+
     return (
       <React.Fragment>
-        <h2>There are {this.state.movies.length} Movies In The Database</h2>
+        <h2>There are {count} Movies In The Database</h2>
         <table className="table">
           <thead className="thead-dark">
             <tr>
@@ -56,7 +72,7 @@ class Movies extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.movies.map((movie) => (
+            {moviesPage.map((movie) => (
               <tr key={movie._id}>
                 <td>{movie.title}</td>
                 <td>{movie.genre.name}</td>
@@ -78,7 +94,7 @@ class Movies extends Component {
           </tbody>
         </table>
         <Pagination
-          itemCount={this.state.movies.length}
+          itemCount={count}
           itemsPerPage={this.state.itemsPerPage}
           currentPage={this.state.currentPage}
           onNext={this.handleGoToNext}
