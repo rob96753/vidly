@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import propTypes from "prop-types";
 import lodash from "lodash";
@@ -53,12 +54,12 @@ const Pagination = (props) => {
 };
 
 Pagination.propTypes = {
-  itemCount: propTypes.number,
-  itemsPerPage: propTypes.number,
-  currentPage: propTypes.number,
-  onNext: propTypes.func,
-  onPrevious: propTypes.func,
-  onGoTo: propTypes.func,
+  itemCount: propTypes.number.isRequired,
+  itemsPerPage: propTypes.number.isRequired,
+  currentPage: propTypes.number.isRequired,
+  onNext: propTypes.func.isRequired,
+  onPrevious: propTypes.func.isRequired,
+  onGoTo: propTypes.func.isRequired,
 };
 
 export default Pagination;
