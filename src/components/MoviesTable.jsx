@@ -4,19 +4,34 @@ import Like from "./common/liked";
 const MoviesTable = (props) => {
   const { moviesPage, onSelectLiked, onDeleteMovie, onSort } = props;
   return (
-    <table className="table">
+    <table className="table table-striped table-bordered table-sm">
       <thead className="thead-dark">
         <tr>
-          <th scope="col" onClick={() => onSort()} id="th-title">
+          <th scope="col" onClick={() => onSort("title")} id="th-title">
             Title
           </th>
-          <th scope="col" onClick={() => onSort()} id="th-title">
+          <th
+            className="th-inner sortable both desc"
+            scope="col"
+            onClick={() => onSort("genre.name")}
+            id="th-genre-name"
+          >
             Genre
           </th>
-          <th scope="col" onClick={() => onSort()} id="th-title">
+          <th
+            className="th-inner sortable both desc"
+            scope="col"
+            onClick={() => onSort("numberInStock")}
+            id="th-number-in-stock"
+          >
             Number in Stock
           </th>
-          <th scope="col" onClick={() => onSort()} id="th-title">
+          <th
+            className="th-inner sortable both desc"
+            scope="col"
+            onClick={() => onSort("dailyRentalRate")}
+            id="th-daily-rental"
+          >
             Daily Rental
           </th>
           <th />

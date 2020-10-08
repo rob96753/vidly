@@ -5,6 +5,7 @@ import Pagination from "./common/pagination";
 import paginate from "../utils/paginate";
 import GroupFilter from "./common/filter";
 import MoviesTable from "./MoviesTable";
+import lodash from "lodash";
 
 const DEFAULT_PAGE = 1;
 
@@ -15,6 +16,7 @@ class Movies extends Component {
     currentGenre: 0,
     currentPage: DEFAULT_PAGE,
     itemsPerPage: 4,
+    sortColumn: { path: "title", order: "asc" },
   };
 
   constructor() {
@@ -60,8 +62,20 @@ class Movies extends Component {
     this.setState({ currentGenre: genre._id, currentPage: DEFAULT_PAGE });
   };
 
-  handleOnSort = () => {
-    console.log("onSort");
+  handleOnSort = (pathToTargetProperty) => {
+    const sortColumn = { ...this.state.sortColumn };
+
+    console.log(`onSort ${pathToTargetProperty} ${sortColumn.path}`);
+    if (pathToTargetProperty === sortColumn.path)
+      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
+    else {
+      sortColumn.path = pathToTargetProperty;
+      sortColumn.order = "asc";
+    }
+
+    this.setState({
+      sortColumn: sortColumn,
+    });
   };
 
   render() {
@@ -69,6 +83,7 @@ class Movies extends Component {
     const {
       itemsPerPage,
       currentPage,
+      sortColumn,
       movies,
       genres,
       currentGenre,
@@ -85,9 +100,15 @@ class Movies extends Component {
       (movie) => !currentGenre || movie.genre._id === currentGenre
     );
 
-    const { length: count } = movieList;
+    const sortedList = lodash.orderBy(
+      movieList,
+      [sortColumn.path],
+      [sortColumn.order]
+    );
 
-    const moviesPage = paginate(movieList, currentPage, itemsPerPage);
+    const { length: count } = sortedList;
+
+    const moviesPage = paginate(sortedList, currentPage, itemsPerPage);
     return (
       <div className="container">
         <div className="row">
