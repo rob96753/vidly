@@ -16,7 +16,7 @@ const Pagination = (props) => {
   if (numberPages < 2) return null;
   const pages = lodash.range(1, numberPages + 1);
   return (
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation example mt-3">
       <ul className="pagination" key="pagination">
         <li
           className={currentPage === 1 ? "page-item disabled" : "page-item"}

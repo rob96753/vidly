@@ -1,26 +1,37 @@
 import React from "react";
 
 const GroupFilter = (props) => {
-  const { genres, onSelect, currentGenre } = props;
-  console.log(genres, currentGenre);
+  const {
+    items,
+    onSelectItem,
+    selectedItem,
+    textProperty,
+    valueProperty,
+  } = props;
+
   return (
     <ul className="list-group">
-      {genres.map((genre) => (
+      {items.map((item) => (
         <li
-          key={`li-genre-${genre.name}`}
+          key={`li-genre-${item[textProperty]}`}
           className={
-            genre._id === currentGenre
+            item[valueProperty] === selectedItem
               ? "list-group-item active"
               : "list-group-item"
           }
-          onClick={() => onSelect(genre)}
-          id={`li-genre-${genre.name}`}
+          onClick={() => onSelectItem(item)}
+          id={`li-genre-${item[textProperty]}`}
         >
-          {genre.name}
+          {item[textProperty]}
         </li>
       ))}
     </ul>
   );
+};
+
+GroupFilter.defaultProps = {
+  textProperty: "name",
+  valueProperty: "_id",
 };
 
 export default GroupFilter;
