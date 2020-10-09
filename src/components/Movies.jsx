@@ -62,17 +62,8 @@ class Movies extends Component {
     this.setState({ currentGenre: genre._id, currentPage: DEFAULT_PAGE });
   };
 
-  handleOnSort = (pathToTargetProperty) => {
-    const sortColumn = { ...this.state.sortColumn };
-
-    console.log(`onSort ${pathToTargetProperty} ${sortColumn.path}`);
-    if (pathToTargetProperty === sortColumn.path)
-      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
-    else {
-      sortColumn.path = pathToTargetProperty;
-      sortColumn.order = "asc";
-    }
-
+  // refactored to move the onnership of the sort to the table
+  handleOnSort = (sortColumn) => {
     this.setState({
       sortColumn: sortColumn,
     });
@@ -126,6 +117,7 @@ class Movies extends Component {
               moviesPage={moviesPage}
               onSelectLiked={this.handleLiked}
               onDeleteMovie={this.handleDeleteMovie}
+              sortColumn={sortColumn}
               onSort={this.handleOnSort}
             />
           </div>
