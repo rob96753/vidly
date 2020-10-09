@@ -3,11 +3,15 @@ import Like from "./liked";
 
 class TableBody extends Component {
   render() {
+    // this needs to be refactoted so the columns carries definitions
+    // of the delete and liked components; also the rendering of the
+    // columns as a map instead of hard coded here.
     const { moviesPage, onDeleteMovie, onSelectLiked, columns } = this.props;
-
+    //console.log(columns);
     return (
       <tbody>
         {moviesPage.map((movie) => (
+          //columns.map (column => {});
           <tr key={movie._id}>
             <td>{movie.title}</td>
             <td>{movie.genre.name}</td>

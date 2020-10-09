@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import TableHeader from "./common/tableHeader";
-import TableBody from "./common/tableBody";
-
-import Like from "./common/liked";
+import Table from "./common/table";
 
 class MoviesTable extends Component {
   columns = [
@@ -15,6 +12,8 @@ class MoviesTable extends Component {
   ];
 
   render() {
+    // this needs to be refactoted to remove the liked and delete
+    // and to pass that in as content in the columns array
     const {
       moviesPage,
       onSelectLiked,
@@ -22,19 +21,16 @@ class MoviesTable extends Component {
       sortColumn,
       onSort,
     } = this.props;
+
     return (
-      <table className="table table-striped table-bordered table-sm">
-        <TableHeader
-          columns={this.columns}
-          sortColumn={sortColumn}
-          onSort={onSort}
-        />
-        <TableBody
-          moviesPage={moviesPage}
-          onDelete={onDeleteMovie}
-          onSelectLike={onSelectLiked}
-        />
-      </table>
+      <Table
+        columns={this.columns}
+        data={moviesPage}
+        sortColumn={sortColumn}
+        onSelectLike={onSelectLiked}
+        onDeleteMovie={onDeleteMovie}
+        onSort={onSort}
+      />
     );
   }
 }
