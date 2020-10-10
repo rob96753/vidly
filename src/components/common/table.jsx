@@ -17,7 +17,7 @@ const Table = ({
     <table className="table table-striped table-bordered table-sm">
       <TableHeader columns={columns} sortColumn={sortColumn} onSort={onSort} />
       <TableBody
-        moviesPage={data}
+        data={data}
         onDelete={onDeleteMovie}
         onSelectLike={onSelectLike}
         columns={columns}

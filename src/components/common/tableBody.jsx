@@ -1,33 +1,28 @@
 import React, { Component } from "react";
-import Like from "./liked";
+import lodash from "lodash";
 
 class TableBody extends Component {
+  renderCell = (item, column) => {
+    if (column.content) return column.content(item);
+
+    return lodash.get(item, column.path);
+  };
+
   render() {
-    // this needs to be refactoted so the columns carries definitions
+    // refactoted so the columns carries definitions
     // of the delete and liked components; also the rendering of the
     // columns as a map instead of hard coded here.
-    const { moviesPage, onDeleteMovie, onSelectLiked, columns } = this.props;
-    //console.log(columns);
+    const { data, columns } = this.props;
+
     return (
       <tbody>
-        {moviesPage.map((movie) => (
-          //columns.map (column => {});
-          <tr key={movie._id}>
-            <td>{movie.title}</td>
-            <td>{movie.genre.name}</td>
-            <td>{movie.numberInStock}</td>
-            <td>{movie.dailyRentalRate}</td>
-            <td>
-              <Like movie={movie} onLike={onSelectLiked} />
-            </td>
-            <td>
-              <button
-                onClick={(e) => onDeleteMovie(movie._id, e)}
-                className="btn btn-danger btn-sm mt-2"
-              >
-                Delete
-              </button>
-            </td>
+        {data.map((item) => (
+          <tr key={item._id}>
+            {columns.map((column) => (
+              <td key={`${item._id}_${column.path || column.key}`}>
+                {this.renderCell(item, column)}
+              </td>
+            ))}
           </tr>
         ))}
       </tbody>
