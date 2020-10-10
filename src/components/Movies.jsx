@@ -69,24 +69,13 @@ class Movies extends Component {
     });
   };
 
-  render() {
-    //const { length: count } = this.state.movies;
-    const {
-      itemsPerPage,
-      currentPage,
-      sortColumn,
-      movies,
-      genres,
-      currentGenre,
-    } = this.state;
-
-    /* if (!count)
-      return (
-        <div>
-          <h1>No Movies Found!</h1>
-        </div>
-      ); */
-
+  getPagedData = (
+    movies,
+    currentGenre,
+    sortColumn,
+    currentPage,
+    itemsPerPage
+  ) => {
     const movieList = movies.filter(
       (movie) => !currentGenre || movie.genre._id === currentGenre
     );
@@ -100,6 +89,35 @@ class Movies extends Component {
     const { length: count } = sortedList;
 
     const moviesPage = paginate(sortedList, currentPage, itemsPerPage);
+    return { filteredCount: count, data: moviesPage };
+  };
+
+  render() {
+    //const { length: count } = this.state.movies;
+    const {
+      itemsPerPage,
+      currentPage,
+      sortColumn,
+      movies,
+      genres,
+      currentGenre,
+    } = this.state;
+
+    const { filteredCount, data: moviesPage } = this.getPagedData(
+      movies,
+      currentGenre,
+      sortColumn,
+      currentPage,
+      itemsPerPage
+    );
+
+    if (!filteredCount)
+      return (
+        <div>
+          <h1>No Movies Found!</h1>
+        </div>
+      );
+
     return (
       <div className="container">
         <div className="row">
@@ -111,9 +129,9 @@ class Movies extends Component {
             />
           </div>
           <div className="col">
-            <h2>There are {count} Movies Returned In Filter</h2>
+            <h2>There are {filteredCount} Movies Returned In Filter</h2>
             <MoviesTable
-              count={count}
+              count={filteredCount}
               moviesPage={moviesPage}
               onSelectLiked={this.handleLiked}
               onDeleteMovie={this.handleDeleteMovie}
@@ -123,7 +141,7 @@ class Movies extends Component {
           </div>
         </div>
         <Pagination
-          itemCount={count}
+          itemCount={filteredCount}
           itemsPerPage={this.state.itemsPerPage}
           currentPage={this.state.currentPage}
           onNext={this.handleGoToNext}
