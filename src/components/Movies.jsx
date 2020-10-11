@@ -120,6 +120,7 @@ class Movies extends Component {
 
     return (
       <div className="container">
+        <h1>Movies</h1>
         <div className="row">
           <div className="col-xs mr-3 mt-5">
             <GroupFilter

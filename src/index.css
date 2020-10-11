@@ -12,6 +12,11 @@ code {
     monospace;
 }
 
+.container h1,
+h2 {
+  margin-top: 2rem;
+}
+
 .clickable {
   cursor: pointer;
 }
