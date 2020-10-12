@@ -11,7 +11,7 @@ const NavBar = () => {
         <Link className="navbar-brand" to="/" id="navbarBrand">
           Vidly
         </Link>
-        <NavLink className="nav-item nav-link" to="/movies" id="navbarMovies">
+        <NavLink className="nav-item nav-link " to="/movies" id="navbarMovies">
           Movies
         </NavLink>
         <NavLink
@@ -23,6 +23,9 @@ const NavBar = () => {
         </NavLink>
         <NavLink className="nav-item nav-link" to="/rentals" id="navbarRentals">
           Rentals
+        </NavLink>
+        <NavLink className="nav-item nav-link" to="/login" id="navbarLogin">
+          Login
         </NavLink>
       </div>
     </nav>
