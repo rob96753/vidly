@@ -1,59 +1,42 @@
-import React, { Component } from "react";
+import React from "react";
+import Form from "./common/form";
+const Joi = require("joi");
 
-class LoginForm extends Component {
+class LoginForm extends Form {
   username = React.createRef();
   password = React.createRef();
 
   state = {
-    account: { username: "", password: "" },
+    data: { username: "", password: "" },
+    errors: {},
+    warnings: {},
   };
 
-  handleSubmit = (e) => {
-    // prevents a full page refresh
-    e.preventDefault();
-    const username = this.username.current.value;
-    const password = this.password.current.value;
-    console.log(e);
+  //joi is an lightweight option as a validator
+  /**
+   * //.regex(RegExp(this.pattern))
+    confirmPassword: Joi.any()
+      .valid(Joi.ref("password"))
+      .required()
+      .label("Confirm Password"),
+   */
+  schema = {
+    username: Joi.string().min(3).max(30).required().label("Username"),
+    password: Joi.string().min(8).max(30).required().label("Password"),
   };
 
-  handleChange = ({ currentTarget: input }) => {
-    const account = { ...this.state.account };
-    account[input.name] = input.value;
-    this.setState({ account });
+  doSubmit = () => {
+    // call the server after a submit
   };
 
   render() {
-    const { username, password } = this.state.account;
     return (
       <div>
         <h1>Login Form</h1>
         <form onSubmit={this.handleSubmit}>
-          <div className="formgroup">
-            <label htmlFor="username">User Name</label>
-            <input
-              autoFocus
-              onChange={this.handleChange}
-              value={username}
-              ref={this.username}
-              name="username"
-              id="username"
-              type="text"
-              className="form-control"
-            />
-          </div>
-          <div className="formgroup">
-            <label htmlFor="password">Password</label>
-            <input
-              onChange={this.handleChange}
-              value={password}
-              name="password"
-              ref={this.password}
-              id="password"
-              type="password"
-              className="form-control"
-            />
-          </div>
-          <button className="btn btn-primary mt-4">Login</button>
+          {this.renderInput("username", "Username", true, "text")}
+          {this.renderInput("password", "Password", false, "password")}
+          {this.renderButton("Login")}
         </form>
       </div>
     );
