@@ -5,9 +5,11 @@ import Pagination from "./common/pagination";
 import paginate from "../utils/paginate";
 import GroupFilter from "./common/filter";
 import MoviesTable from "./MoviesTable";
+import SearchBox from "./common/SeachBox";
 import lodash from "lodash";
 
 const DEFAULT_PAGE = 1;
+const INITIAL_GENRE = null;
 
 class Movies extends Component {
   state = {
@@ -16,6 +18,8 @@ class Movies extends Component {
     currentGenre: 0,
     currentPage: DEFAULT_PAGE,
     itemsPerPage: 4,
+    searchQuery: "",
+    selectedGenre: INITIAL_GENRE,
     sortColumn: { path: "title", order: "asc" },
   };
 
@@ -58,8 +62,18 @@ class Movies extends Component {
     });
   };
 
+  /* you must set the searchQuery to "". If you set searchQuery
+     null or undefined,  then React will think it's an uncontrolled Component.
+     React will get confused when you start typing into the component 
+     and will think you are trying to convert the component from an 
+     uncontrolled component to a controlled component.
+    */
   handleFilterSelect = (genre) => {
-    this.setState({ currentGenre: genre._id, currentPage: DEFAULT_PAGE });
+    this.setState({
+      currentGenre: genre._id,
+      searchQuery: "",
+      currentPage: DEFAULT_PAGE,
+    });
   };
 
   // refactored to move the onnership of the sort to the table
@@ -69,16 +83,38 @@ class Movies extends Component {
     });
   };
 
+  handleSearch = (query) => {
+    this.setState({
+      searchQuery: query,
+      selectedGenre: INITIAL_GENRE,
+      currentPage: 1,
+    });
+  };
+
   getPagedData = (
     movies,
     currentGenre,
     sortColumn,
     currentPage,
-    itemsPerPage
+    itemsPerPage,
+    searchQuery
   ) => {
-    const movieList = movies.filter(
-      (movie) => !currentGenre || movie.genre._id === currentGenre
-    );
+    let movieList = movies;
+
+    console.log(`Search Query: ${searchQuery}`);
+
+    if (searchQuery) {
+      movieList = movies.filter((movie) =>
+        movie.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+
+      console.log(`Search Query: ${searchQuery}`);
+      console.log(`MovieList${movieList}`);
+    } else if (currentGenre && currentGenre._id) {
+      movieList = movies.filter(
+        (movie) => !currentGenre || movie.genre._id === currentGenre
+      );
+    }
 
     const sortedList = lodash.orderBy(
       movieList,
@@ -92,7 +128,35 @@ class Movies extends Component {
     return { filteredCount: count, data: moviesPage };
   };
 
+  moviesTable = (
+    count,
+    moviesPage,
+    onSelectLiked,
+    onDeleteMovie,
+    sortColumn,
+    onSort
+  ) => {
+    if (!count)
+      return (
+        <>
+          <p>No Movies Found!</p>
+        </>
+      );
+
+    return (
+      <MoviesTable
+        count={count}
+        moviesPage={moviesPage}
+        onSelectLiked={onSelectLiked}
+        onDeleteMovie={onDeleteMovie}
+        sortColumn={sortColumn}
+        onSort={onSort}
+      />
+    );
+  };
+
   render() {
+    const { history } = this.props;
     //const { length: count } = this.state.movies;
     const {
       itemsPerPage,
@@ -101,6 +165,7 @@ class Movies extends Component {
       movies,
       genres,
       currentGenre,
+      searchQuery,
     } = this.state;
 
     const { filteredCount, data: moviesPage } = this.getPagedData(
@@ -108,15 +173,9 @@ class Movies extends Component {
       currentGenre,
       sortColumn,
       currentPage,
-      itemsPerPage
+      itemsPerPage,
+      searchQuery
     );
-
-    if (!filteredCount)
-      return (
-        <div>
-          <h1>No Movies Found!</h1>
-        </div>
-      );
 
     return (
       <div className="container">
@@ -129,16 +188,24 @@ class Movies extends Component {
               selectedItem={currentGenre}
             />
           </div>
+
           <div className="col">
+            <button
+              onClick={() => history.push("/movies/new")}
+              className="btn btn-primary btn-sm mb-2"
+            >
+              Add Movie
+            </button>
             <h2>There are {filteredCount} Movies Returned In Filter</h2>
-            <MoviesTable
-              count={filteredCount}
-              moviesPage={moviesPage}
-              onSelectLiked={this.handleLiked}
-              onDeleteMovie={this.handleDeleteMovie}
-              sortColumn={sortColumn}
-              onSort={this.handleOnSort}
-            />
+            <SearchBox value={searchQuery} onChange={this.handleSearch} />
+            {this.moviesTable(
+              filteredCount,
+              moviesPage,
+              this.handleLiked,
+              this.handleDeleteMovie,
+              sortColumn,
+              this.handleOnSort
+            )}
           </div>
         </div>
         <Pagination

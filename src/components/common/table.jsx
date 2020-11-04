@@ -12,7 +12,6 @@ const Table = ({
   data,
   columns,
 }) => {
-  console.log(onSelectLike, onDeleteMovie);
   return (
     <table className="table table-striped table-bordered table-sm">
       <TableHeader columns={columns} sortColumn={sortColumn} onSort={onSort} />

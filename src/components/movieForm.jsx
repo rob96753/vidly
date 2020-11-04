@@ -5,7 +5,7 @@ const MovieForm = ({ match, history }) => {
     <div>
       <h1>Movie Form {match.params.id}</h1>
       <button
-        className="btn btm-primary"
+        className="btn btn-primary"
         onClick={() => history.push("/movies")}
       >
         Save

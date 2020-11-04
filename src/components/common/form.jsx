@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Input from "./Input";
+import Select from "./select";
 const Joi = require("joi");
 
 class Form extends Component {
@@ -22,7 +23,6 @@ class Form extends Component {
     const object = { [name]: value };
     const schema = { [name]: this.schema[name] };
     const { error: warning } = Joi.validate(object, schema);
-    console.log(name, warning);
     return warning ? warning.details[0].message : null;
   };
 
@@ -45,7 +45,33 @@ class Form extends Component {
     this.setState({ data, warnings });
   };
 
+  renderSelect = (
+    name,
+    label,
+    options,
+    onChange,
+    textProperty,
+    valueProperty,
+    selectedItem
+  ) => {
+    const { errors, warnings } = this.state;
+    return (
+      <Select
+        name={name}
+        label={label}
+        options={options}
+        onChange={onChange}
+        textProperty={textProperty}
+        valueProperty={valueProperty}
+        selectedItem={selectedItem}
+        error={errors[name]}
+        warnings={warnings[name]}
+      />
+    );
+  };
+
   renderButton = (label) => {
+    console.log("Render Button", label, this.validate());
     return (
       <button disabled={this.validate()} className="btn btn-primary mt-4">
         {label}
