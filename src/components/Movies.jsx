@@ -101,16 +101,15 @@ class Movies extends Component {
   ) => {
     let movieList = movies;
 
-    console.log(`Search Query: ${searchQuery}`);
+    console.log(`Search Query: "${searchQuery}" Current Genre ${currentGenre}`);
 
     if (searchQuery) {
+      console.log(`Search Query: ${searchQuery}`);
       movieList = movies.filter((movie) =>
         movie.title.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
-
-      console.log(`Search Query: ${searchQuery}`);
-      console.log(`MovieList${movieList}`);
-    } else if (currentGenre && currentGenre._id) {
+    } else if (currentGenre) {
+      console.log(`Current Genre ${currentGenre}`);
       movieList = movies.filter(
         (movie) => !currentGenre || movie.genre._id === currentGenre
       );
